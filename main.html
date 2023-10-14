@@ -43,12 +43,14 @@
                     if(data.success) {
                         document.getElementById("login").removeEventListener('click', login, false);
                         document.getElementById("createAccount").removeEventListener('click', create_account, false);
+                        window.location.href = 'info-form.html';
                         fetch("userinfo.php", {
                             method: 'POST',
                             body: JSON.stringify(data),
                             headers: { 'content-type': 'application/json' }
                         }).then(response => response.json())
                         .then(data => {
+                            
                             document.body.innerHTML = 'Logged in as ' + data.username;
                             const form = document.createElement('form');
                             form.setAttribute('id', 'myForm');
