@@ -4,7 +4,7 @@
         
     </head>
     <body>
-        <h1>Calendar</h1>
+        <h1>Language Sharing</h1>
         <h2>Log In</h2>
         
         <label for="username">Username:</label>
@@ -26,7 +26,9 @@
         <input type="submit" value="Create Account" id = "createAccount">
 
         <script>
-            document.getElementById("login").addEventListener("click", function(event) {
+            document.getElementById("login").addEventListener("click", login, false);
+
+            function login(event) {
                 const username = document.getElementById("username").value;
                 const password = document.getElementById("password").value;
             
@@ -38,12 +40,54 @@
                 })
                 .then(response => response.json())
                 .then(data => {
+                    if(data.success) {
+                        document.getElementById("login").removeEventListener('click', login, false);
+                        document.getElementById("createAccount").removeEventListener('click', create_account, false);
+                        fetch("userinfo.php", {
+                            method: 'POST',
+                            body: JSON.stringify(data),
+                            headers: { 'content-type': 'application/json' }
+                        }).then(response => response.json())
+                        .then(data => {
+                            document.body.innerHTML = 'Logged in as ' + data.username;
+                            const form = document.createElement('form');
+                            form.setAttribute('id', 'myForm');
+                            document.body.appendChild(form);
                     
+                            // Create a form title
+                            const formTitle = document.createElement('h2');
+                            formTitle.textContent = 'Generic Form';
+                            form.appendChild(formTitle);
+                    
+                            // Create an input field for a text box
+                            const inputText = document.createElement('input');
+                            inputText.setAttribute('type', 'text');
+                            inputText.setAttribute('name', 'text-input');
+                            inputText.setAttribute('placeholder', 'Enter text');
+                            form.appendChild(inputText);
+                    
+                            // Create a submit button
+                            const submitButton = document.createElement('input');
+                            submitButton.setAttribute('type', 'submit');
+                            submitButton.setAttribute('value', 'Submit');
+                            form.appendChild(submitButton);
+                    
+                            // Event listener for form submission
+                            form.addEventListener('submit', function (e) {
+                                e.preventDefault();
+                                const formData = new FormData(form);
+                                alert('Submitted data: ' + formData.get('text-input'));
+                            });
+                        });
+                        
+                    }
                 })
                 .catch(err => console.error(err));
-            }, false);
+            }
             
-            document.getElementById("createAccount").addEventListener("click", function(event) {
+            document.getElementById("createAccount").addEventListener("click", create_account, false);
+
+            function create_account(event) {
                 const username = document.getElementById("new_username").value;
                 const password = document.getElementById("new_password").value;
             
@@ -56,7 +100,8 @@
                 .then(response => response.json())
                 .then(data => console.log(data.success ? "You've created a new account!" : `You did not create a new account! ${data.message}`))
                 .catch(err => console.error(err));
-            }, false);
+            }
+
         </script>
     </body>
 </html>
