@@ -8,24 +8,26 @@
     $json_obj = json_decode($json_str, true);
     require 'database.php';
 
-    $username = $json_obj['username'];
+    $username = $_SESSION['username'];
+    $name = $json_obj['name'];
     $dob = $json_obj['dob'];
     $native = $json_obj['native'];
     $new = $json_obj['new'];
 
     $username = $mysqli->real_escape_string($username);
+    $name = $mysqli->real_escape_string($name);
     $dob = $mysqli->real_escape_string($dob);
     $native = $mysqli->real_escape_string($native);
     $new = $mysqli->real_escape_string($new);
 
     $success = true;
 
-    $stmt = $mysqli->prepare("insert into userinfo (username, dob, native, new) values (?, ?, ?, ?)");
+    $stmt = $mysqli->prepare("insert into userinfo (username, name, dob, native_language, new_language) values (?, ?, ?, ?, ?)");
     if(!$stmt){
         $success = false;
     }
 
-    if ($success && !$stmt->bind_param('ssss', $username, $dob, $native, $new)) {
+    if ($success && !$stmt->bind_param('sssss', $username, $name, $dob, $native, $new)) {
         $success = false;
     }
 
@@ -39,7 +41,12 @@
 
     if($success) {
         echo json_encode(array(
-            "success" => true
+            "success" => true,
+            "username" => "$username",
+            "name" => "$name",
+            "dob" => "$dob",
+            "native" => "$native",
+            "new" => "$new"
         ));
         exit;
     } else {
