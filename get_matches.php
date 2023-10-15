@@ -72,9 +72,35 @@ if($stmt->bind_param('s', $username) && $stmt->execute()) {
     exit;
 }
 
+$backMatchedEmails = array();
+foreach ($backMatchedUsernames as $backMatchedUser){
+    $stmt1 = $mysqli->prepare("SELECT email FROM userinfo WHERE username = ?");
+    if (!$stmt1) {
+        echo json_encode(array(
+            "success" => false,
+            "message" => "Database error (query 2): " . $mysqli->error
+        ));
+        exit;
+    }
+    if($stmt1->bind_param('s', $backMatchedUser) && $stmt1->execute()) {
+        $stmt1->bind_result($email);
+        $stmt1->fetch();
+        $backMatchedEmails[] = $email;
+        $stmt1->close();
+    } else {
+        echo json_encode(array(
+            "success" => false,
+            "message" => "Database error (query 2): " . $stmt1->error
+        ));
+        exit;
+    }
+}
+
+// INSERT CODE HERE
 echo json_encode(array(
     "success" => true,
-    "matchedUsernames" => $backMatchedUsernames
+    "matchedUsernames" => $backMatchedUsernames,
+    "matchedEmails" => $backMatchedEmails
 ));
 
 

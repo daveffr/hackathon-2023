@@ -53,14 +53,20 @@
           var userObjects = data.user_list;
           const userList = document.getElementById("user-list");
           var index = 0;
+          console.log(data.hobbies);
           userObjects.forEach((user) => {
+            if(user.username == null) {
+              return;
+            }
             // Create a list item element with Bootstrap classes
             const listItem = document.createElement("li");
             listItem.classList.add("list-group-item", "list-group-item-action", "text-center");
             var index = 0;
             // Build the content for each user
             const userContent = `
+
                 <strong>Name:</strong> ${user.name}<br>
+                <strong>compatibility:</strong> ${data.scores[index]}<br>
                 <strong>Date of Birth:</strong> ${user.dob}<br>
                 <strong>Native Language:</strong> ${user.native_language}<br>
                 <strong>New Language:</strong> ${user.new_language}<br>
@@ -69,6 +75,7 @@
             console.log("button"+index.toString());
             listItem.innerHTML = userContent;
             userList.appendChild(listItem);
+            const matchSuccess="You have sent a match!"
             document.getElementById("button"+index.toString()).addEventListener("click", (event) =>{
 
               const data = {matched_username: user.username};
@@ -80,6 +87,7 @@
               .then((response) => response.json())
               .then((data) => {
                 if(data.success) {
+                  alert(matchSuccess)
                   console.log(data.message);
                 } else {
                   console.log(data.message);

@@ -15,28 +15,25 @@
     $dob = $json_obj['dob'];
     $native = $json_obj['native'];
     $new = $json_obj['new'];
+    $hobbies = $json_obj['hobbies'];
+    $email = $json_obj['email'];
+    
 
     $username = $mysqli->real_escape_string($username);
     $name = $mysqli->real_escape_string($name);
     $dob = $mysqli->real_escape_string($dob);
     $native = $mysqli->real_escape_string($native);
     $new = $mysqli->real_escape_string($new);
-
     //check if userinfo is already in database for username
-
-    
-    
-
-    
 
     $success = true;
 
-    $stmt = $mysqli->prepare("insert into userinfo (username, name, dob, native_language, new_language) values (?, ?, ?, ?, ?)");
+    $stmt = $mysqli->prepare("insert into userinfo (username, name, dob, native_language, new_language, email, hobbies1, hobbies2, hobbies3, hobbies4, hobbies5, hobbies6, hobbies7, hobbies8, hobbies9, hobbies10) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
     if(!$stmt){
         $success = false;
     }
 
-    if ($success && !$stmt->bind_param('sssss', $username, $name, $dob, $native, $new)) {
+    if ($success && !$stmt->bind_param('ssssssiiiiiiiiii', $username, $name, $dob, $native, $new, $email, $hobbies[0], $hobbies[1], $hobbies[2], $hobbies[3], $hobbies[4], $hobbies[5], $hobbies[6], $hobbies[7], $hobbies[8], $hobbies[9])) {
         $success = false;
     }
 

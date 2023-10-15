@@ -55,17 +55,20 @@
         .then((data) => {
           if (data.success) {
             console.log(data.matchedUsernames);
+            console.log(data.matchedEmails);
             const matchObjects = data.matchedUsernames;
             const matchList = document.getElementById("match-list");
+            var index = 0;
       
             matchObjects.forEach((match) => {
               
                 const listItem = document.createElement("li");
                 listItem.classList.add("list-group-item", "list-group-item-action", "text-center");
                 // Add the user's name to the list item
-                listItem.innerText = match;
+                listItem.innerText = match + " (" + data.matchedEmails[index] + ")";
                 // Add the list item to the list
                 matchList.appendChild(listItem);
+                index++;
               
             });
           }
