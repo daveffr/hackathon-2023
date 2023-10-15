@@ -49,7 +49,11 @@
           .then((response) => response.json())
           .then((data) => {
             if (data.success) {
-              window.location.href = "info-form.html";
+              if(data.message == "You already have an account") {
+                window.location.href = "main.html";
+              } else {
+                window.location.href = "info-form.html";
+              }
             }
           })
           .catch((err) => console.error(err));

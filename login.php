@@ -8,6 +8,8 @@ $json_str = file_get_contents('php://input');
 //This will store the data into an associative array
 $json_obj = json_decode($json_str, true);
 
+session_start();
+
 //Variables can be accessed as such:
 $username = $json_obj['username'];
 $password = $json_obj['password'];
@@ -45,13 +47,51 @@ if($valid) {
 
 $stmt->close();
 
+$success = true;
+$username_present;
+
+$stmt = $mysqli->prepare("select username from userinfo where username=?");
+if(!$stmt){
+	$success = false;
+}
+
+if ($success && !$stmt->bind_param('s', $username)) {
+	$success = false;
+}
+
+if($success && !$stmt->execute()) {
+	$success = false;
+}
+
+if($success && !$stmt->bind_result($username_present)) {
+	$success = false;
+}
+
+if($success && !$stmt->fetch()) {
+	$success = false;
+}
+
+if($success && !$stmt->close()) {
+	$success = false;
+}
+
+if($username_present != null) {
+	echo json_encode(array(
+		"success" => true,
+		"message" => "You already have an account"
+	));
+	exit;
+}
+
+
 if($valid){
 	session_start();
 	$_SESSION['username'] = $username;
 	$_SESSION['token'] = bin2hex(openssl_random_pseudo_bytes(32)); 
 
 	echo json_encode(array(
-		"success" => true
+		"success" => true,
+		"message" => "You chillin"
 	));
 	exit;
 }else{

@@ -128,12 +128,19 @@
           .then((response) => response.json())
           .then((data) => {
             if (data.success) {
-              console.log(data.success);
-              console.log(data.username);
-              console.log(data.name);
-              console.log(data.dob);
-              console.log(data.native);
-              console.log(data.new);
+              if(data.message == "You already have an account") {
+                window.location.href = "main.html";
+              } else {
+                console.log(data.success);
+                console.log(data.username);
+                console.log(data.name);
+                console.log(data.dob);
+                console.log(data.native);
+                console.log(data.new);
+              
+                window.location.href = "main.html";
+              }
+              
             } else {
               console.log(data.success);
               console.log(data.message);
@@ -142,6 +149,7 @@
               console.log(data.dob);
               console.log(data.native);
               console.log(data.new);
+              
             }
           })
           .catch((err) => console.error(err));

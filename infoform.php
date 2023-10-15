@@ -6,9 +6,10 @@
     $json_str = file_get_contents('php://input');
     //This will store the data into an associative array
     $json_obj = json_decode($json_str, true);
-    require 'database.php';
-    session_start();
 
+    session_start();
+    require 'database.php';
+    
     $username = $_SESSION['username'];
     $name = $json_obj['name'];
     $dob = $json_obj['dob'];
@@ -21,29 +22,30 @@
     $native = $mysqli->real_escape_string($native);
     $new = $mysqli->real_escape_string($new);
 
+    //check if userinfo is already in database for username
+
+    
+    
+
+    
+
     $success = true;
-    $error = "none";
 
     $stmt = $mysqli->prepare("insert into userinfo (username, name, dob, native_language, new_language) values (?, ?, ?, ?, ?)");
     if(!$stmt){
         $success = false;
-        $error = "first";
     }
 
     if ($success && !$stmt->bind_param('sssss', $username, $name, $dob, $native, $new)) {
         $success = false;
-        $error = "sec";
     }
 
     if($success && !$stmt->execute()) {
         $success = false;
-        $error = mysqli_error($connection);
-
     }
 
     if($success && !$stmt->close()) {
         $success = false;
-        $error = "foueth";
     }
 
     if($success) {
@@ -53,18 +55,14 @@
             "name" => "$name",
             "dob" => "$dob",
             "native" => "$native",
-            "new" => "$new"
+            "new" => "$new",
+            "message" => "you chillin"
         ));
         exit;
     } else {
         echo json_encode(array(
             "success" => false,
-            "message" => "$error",
-            "username" => "$username",
-            "name" => "$name",
-            "dob" => "$dob",
-            "native" => "$native",
-            "new" => "$new"
+            "message" => "You F-ed up"
         ));
         exit;
     }
