@@ -56,14 +56,15 @@
           userObjects.forEach((user) => {
             // Create a list item element with Bootstrap classes
             const listItem = document.createElement("li");
-            listItem.classList.add("list-group-item", "list-group-item-action");
+            listItem.classList.add("list-group-item", "list-group-item-action", "text-center");
 
             // Build the content for each user
             const userContent = `
                 <strong>Name:</strong> ${user.name}<br>
                 <strong>Date of Birth:</strong> ${user.dob}<br>
                 <strong>Native Language:</strong> ${user.native_language}<br>
-                <strong>New Language:</strong> ${user.new_language}
+                <strong>New Language:</strong> ${user.new_language}<br>
+                <button class="btn btn-primary match-button" style="margin-top: 10px">Match</button>
             `;
 
             listItem.innerHTML = userContent;
