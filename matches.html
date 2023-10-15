@@ -45,5 +45,31 @@
     <ul id="match-list" class="list-group">
       <!-- Each object will be displayed here -->
     </ul>
+    <script>
+      const data = "";
+      fetch("get_matches.php", {
+        method: "POST",
+        headers: { "content-type": "application/json" }
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            console.log(data.matchedUsernames);
+            const matchObjects = data.matchedUsernames;
+            const matchList = document.getElementById("match-list");
+      
+            matchObjects.forEach((match) => {
+              
+                const listItem = document.createElement("li");
+                listItem.classList.add("list-group-item", "list-group-item-action", "text-center");
+                // Add the user's name to the list item
+                listItem.innerText = match;
+                // Add the list item to the list
+                matchList.appendChild(listItem);
+              
+            });
+          }
+        });
+    </script>
   </body>
 </html>
