@@ -7,6 +7,7 @@
     //This will store the data into an associative array
     $json_obj = json_decode($json_str, true);
     require 'database.php';
+    session_start();
 
     $username = $_SESSION['username'];
     $name = $json_obj['name'];
@@ -21,22 +22,28 @@
     $new = $mysqli->real_escape_string($new);
 
     $success = true;
+    $error = "none";
 
     $stmt = $mysqli->prepare("insert into userinfo (username, name, dob, native_language, new_language) values (?, ?, ?, ?, ?)");
     if(!$stmt){
         $success = false;
+        $error = "first";
     }
 
     if ($success && !$stmt->bind_param('sssss', $username, $name, $dob, $native, $new)) {
         $success = false;
+        $error = "sec";
     }
 
     if($success && !$stmt->execute()) {
         $success = false;
+        $error = mysqli_error($connection);
+
     }
 
     if($success && !$stmt->close()) {
         $success = false;
+        $error = "foueth";
     }
 
     if($success) {
@@ -52,7 +59,12 @@
     } else {
         echo json_encode(array(
             "success" => false,
-            "message" => "You F-ed up"
+            "message" => "$error",
+            "username" => "$username",
+            "name" => "$name",
+            "dob" => "$dob",
+            "native" => "$native",
+            "new" => "$new"
         ));
         exit;
     }

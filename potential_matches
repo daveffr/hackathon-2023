@@ -1,0 +1,28 @@
+<?php
+    $username = $_SESSION['username'];
+
+    $result1 = $mysqli->query("SELECT native_language, new_language FROM userinfo WHERE username = '$username'");
+    if ($result) {
+        // Fetch the result
+        $userRow = mysqli_fetch_assoc($result);
+
+        // Now, you can access the native_language and new_language of the logged-in user
+        $nativeLanguage = $userRow['native_language'];
+        $newLanguage = $userRow['new_language'];
+
+        // Use $nativeLanguage and $newLanguage as needed
+    } else {
+        // Handle the case where the query fails
+        echo "Error: " . mysqli_error($connection);
+    }
+
+    $result2 = $mysqli->query("SELECT * FROM userinfo WHERE native_language = '$newLanguage' AND new_language = '$nativeLanguage'";)
+    $matchingUsers = array();
+    while ($row = ){
+        $matchingUsers[] = $row;
+    }
+
+    echo json_encode($matchingUsers);
+
+
+?>

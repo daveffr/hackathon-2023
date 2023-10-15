@@ -13,7 +13,7 @@
   </head>
   <body>
     <div class="row" style="margin: 25px">
-      <h1 id = "userinsert" class="text-center">Welcome [insert user here]</h1>
+      <h1 id="userinsert" class="text-center">Welcome [insert user here]</h1>
     </div>
     <div class="row" style="margin: 25px">
       <h2 class="text-center">
@@ -92,13 +92,14 @@
     </div>
     <script>
       fetch("userinfo.php", {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' }
-      }).then(response => response.json())
-      .then(data => {
-          
-          document.getElementById("userinsert").innerHTML = 'Welcome ' + data.username;
-      });
+        method: "POST",
+        headers: { "content-type": "application/json" },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          document.getElementById("userinsert").innerHTML =
+            "Welcome " + data.username;
+        });
 
       document.querySelector("form").addEventListener("submit", submitForm);
 
@@ -107,10 +108,10 @@
 
         const name = document.getElementById("name").value;
         const dob = document.getElementById("dob").value;
-        const nativeLanguage = document.getElementById("native-languages")
-          .value;
-        const languageToLearn = document.getElementById("languages-to-learn")
-          .value;
+        const nativeLanguage =
+          document.getElementById("native-languages").value;
+        const languageToLearn =
+          document.getElementById("languages-to-learn").value;
         console.log(dob);
         const data = {
           name: name,
@@ -128,6 +129,14 @@
           .then((data) => {
             if (data.success) {
               console.log(data.success);
+              console.log(data.username);
+              console.log(data.name);
+              console.log(data.dob);
+              console.log(data.native);
+              console.log(data.new);
+            } else {
+              console.log(data.success);
+              console.log(data.message);
               console.log(data.username);
               console.log(data.name);
               console.log(data.dob);
