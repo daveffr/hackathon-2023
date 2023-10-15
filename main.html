@@ -52,25 +52,48 @@
           console.log(data.user_list)
           var userObjects = data.user_list;
           const userList = document.getElementById("user-list");
-
+          var index = 0;
           userObjects.forEach((user) => {
             // Create a list item element with Bootstrap classes
             const listItem = document.createElement("li");
             listItem.classList.add("list-group-item", "list-group-item-action", "text-center");
-
+            var index = 0;
             // Build the content for each user
             const userContent = `
                 <strong>Name:</strong> ${user.name}<br>
                 <strong>Date of Birth:</strong> ${user.dob}<br>
                 <strong>Native Language:</strong> ${user.native_language}<br>
                 <strong>New Language:</strong> ${user.new_language}<br>
-                <button class="btn btn-primary match-button" style="margin-top: 10px">Match</button>
+                <button class="btn btn-primary match-button" id="button${index.toString()}" style="margin-top: 10px">Match</button>
             `;
-
+            console.log("button"+index.toString());
             listItem.innerHTML = userContent;
+            userList.appendChild(listItem);
+            document.getElementById("button"+index.toString()).addEventListener("click", (event) =>{
+
+              const data = {matched_username: user.username};
+              fetch("match_action.php", {
+                method: "POST",
+                body: JSON.stringify(data),
+                headers: { "content-type": "application/json" }
+              })
+              .then((response) => response.json())
+              .then((data) => {
+                if(data.success) {
+                  console.log(data.message);
+                } else {
+                  console.log(data.message);
+                }
+              })
+              .catch((err) => console.error(err));
+            }, false);
+            index++;
+
+
+            
 
             // Append the list item to the user list container
-            userList.appendChild(listItem);
+            
           });
 
         } else {
