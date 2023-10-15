@@ -37,44 +37,46 @@
       <h1 class="text-center">Users you can match with</h1>
     </div>
 
-    <div id="users-list">
-      <!-- Matching users will be displayed here -->
-    </div>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <ul id="user-list" class="list-group">
+      <!-- Each object will be displayed here -->
+    </ul>
     <script>
-      $(document).ready(function () {
-        $("#language-form").submit(function (e) {
-          e.preventDefault();
+      const data = "";
+      fetch("potential_matches.php", {
+        method: "POST",
+        headers: { "content-type": "application/json" }
+      })
+      .then((response) => response.json())
+      .then((data) => {
+        if(data.success) {
+          console.log(data.user_list)
+          var userObjects = data.user_list;
+          const userList = document.getElementById("user-list");
 
-          // Get selected languages
-          const nativeLanguage = $("#native-language").val();
-          const newLanguage = $("#new-language").val();
+          userObjects.forEach((user) => {
+            // Create a list item element with Bootstrap classes
+            const listItem = document.createElement("li");
+            listItem.classList.add("list-group-item", "list-group-item-action");
 
-          // Perform an AJAX request to fetch matching users
-          $.ajax({
-            url: "fetch_users.php",
-            method: "POST",
-            data: { nativeLanguage, newLanguage },
-            success: function (response) {
-              const matchingUsers = JSON.parse(response);
-              const usersList = $("#users-list");
+            // Build the content for each user
+            const userContent = `
+                <strong>Name:</strong> ${user.name}<br>
+                <strong>Date of Birth:</strong> ${user.dob}<br>
+                <strong>Native Language:</strong> ${user.native_language}<br>
+                <strong>New Language:</strong> ${user.new_language}
+            `;
 
-              // Clear existing list (if any)
-              usersList.html("");
+            listItem.innerHTML = userContent;
 
-              // Display matching users in a nice format
-              if (matchingUsers.length === 0) {
-                usersList.html("<p>No matching users found.</p>");
-              } else {
-                const userListHTML = matchingUsers
-                  .map((user) => `<li>${user.name}</li>`)
-                  .join("");
-                usersList.html(`<ul>${userListHTML}</ul>`);
-              }
-            },
+            // Append the list item to the user list container
+            userList.appendChild(listItem);
           });
-        });
-      });
+
+        } else {
+          console.log(data.message);
+        }
+      })
+      .catch((err) => console.error(err));
     </script>
   </body>
 </html>

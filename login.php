@@ -8,8 +8,6 @@ $json_str = file_get_contents('php://input');
 //This will store the data into an associative array
 $json_obj = json_decode($json_str, true);
 
-session_start();
-
 //Variables can be accessed as such:
 $username = $json_obj['username'];
 $password = $json_obj['password'];
@@ -76,6 +74,9 @@ if($success && !$stmt->close()) {
 }
 
 if($username_present != null) {
+	session_start();
+	$_SESSION['username'] = $username;
+	$_SESSION['token'] = bin2hex(openssl_random_pseudo_bytes(32)); 
 	echo json_encode(array(
 		"success" => true,
 		"message" => "You already have an account"
